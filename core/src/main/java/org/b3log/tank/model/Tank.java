@@ -3,6 +3,9 @@ package org.b3log.tank.model;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lombok.Data;
+import org.b3log.tank.model.common.Position;
+import org.b3log.tank.model.components.Circle;
+import org.b3log.tank.model.components.Rectangle;
 
 /**
  * @author : yu.zhang
@@ -14,6 +17,8 @@ public class Tank {
     private int x;
     private int y;
     private int radius;
+//    private int level;
+//    private Color color;
 
     public Tank(int x, int y, int radius) {
         this.x = x;
@@ -22,9 +27,14 @@ public class Tank {
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.circle(x, y, radius);
-        shapeRenderer.end();
+        Circle circle = new Circle(Position.of(x, y), Color.WHITE, ShapeRenderer.ShapeType.Line);
+        circle.setRadius(radius);
+        circle.setSegments(6);
+        circle.draw(shapeRenderer);
+
+        Rectangle rectangle = new Rectangle(Position.of(x, y), Color.WHITE, ShapeRenderer.ShapeType.Line);
+        rectangle.setWidth(100);
+        rectangle.setHeight(200);
+        rectangle.draw(shapeRenderer);
     }
 }
