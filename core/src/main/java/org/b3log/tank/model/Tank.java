@@ -53,23 +53,28 @@ public class Tank {
     }
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class Head {
-        private float radius;
-        private int segments;
+        private float radius = 16;
+        private int segments = 6;
+        private double angle;
     }
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class Body {
-        private float width;
-        private float height;
+        private float width = 35;
+        private float height = 50;
+        private double angle;
     }
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class Weapon {
-        private float width;
-        private float height;
+        private float width = 5;
+        private float height = 35;
     }
 }

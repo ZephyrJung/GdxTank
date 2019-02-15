@@ -40,7 +40,7 @@ public class GdxTank implements ApplicationListener {
         batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
         batch.end();
         Tank tank = new Tank(shapeRenderer, Position.of(50, 50));
-        tank.draw(new Tank.Head(16, 6), new Tank.Body(35, 50), new Tank.Weapon(5, 35));
+        tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
     }
 
     @Override
