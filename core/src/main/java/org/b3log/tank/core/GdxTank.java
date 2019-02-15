@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
+import org.b3log.tank.model.common.Position;
 
 @Slf4j
 public class GdxTank implements ApplicationListener {
@@ -38,8 +39,8 @@ public class GdxTank implements ApplicationListener {
         batch.begin();
         batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
         batch.end();
-        Tank tank = new Tank(50, 50, 32);
-        tank.draw(shapeRenderer);
+        Tank tank = new Tank(shapeRenderer, Position.of(50, 50));
+        tank.draw(new Tank.Head(16, 6), new Tank.Body(35, 50), new Tank.Weapon(5, 35));
     }
 
     @Override
