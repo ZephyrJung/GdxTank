@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class KeyboardProcessor extends InputAdapter {
     @Override
     public boolean keyDown(int keycode) {
-        log.info("KeyCode:{}", keycode);
+        log.debug("KeyCode:{}", keycode);
         return true;
     }
 }

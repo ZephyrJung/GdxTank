@@ -5,12 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.input.KeyboardProcessor;
 
+@Slf4j
 public class GdxTank implements ApplicationListener {
-    Texture texture;
-    SpriteBatch batch;
-    float elapsed;
+    private Texture texture;
+    private SpriteBatch batch;
+    private float elapsed;
 
     @Override
     public void create() {
@@ -21,6 +23,7 @@ public class GdxTank implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
+        log.debug("resize: width:{}, height:{}", width, height);
     }
 
     @Override
@@ -35,13 +38,16 @@ public class GdxTank implements ApplicationListener {
 
     @Override
     public void pause() {
+        log.debug("Game Paused");
     }
 
     @Override
     public void resume() {
+        log.debug("Game Resumed");
     }
 
     @Override
     public void dispose() {
+        log.debug("Game Disposed");
     }
 }
