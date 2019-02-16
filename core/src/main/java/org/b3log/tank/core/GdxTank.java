@@ -67,22 +67,30 @@ public class GdxTank implements ApplicationListener {
 
     private void moveControl() {
         if (keyboardInput.isUp()) {
-            position.setY(position.getY() + 1);
+            position.setY(position.getY() + 1 * (float) Math.cos(position.getMoveAngle()));
+            position.setX(position.getX() + 1 * (float) Math.sin(position.getMoveAngle()));
         }
         if (keyboardInput.isDown()) {
-            position.setY(position.getY() - 1);
+            position.setY(position.getY() - 1 * (float) Math.cos(position.getMoveAngle()));
+            position.setX(position.getX() - 1 * (float) Math.sin(position.getMoveAngle()));
         }
-        if (keyboardInput.isLeft()) {
-            position.setX(position.getX() - 1);
-        }
-        if (keyboardInput.isRight()) {
-            position.setX(position.getX() + 1);
-        }
+//        if (keyboardInput.isLeft()) {
+//            position.setX(position.getX() - 1);
+//        }
+//        if (keyboardInput.isRight()) {
+//            position.setX(position.getX() + 1);
+//        }
         if (keyboardInput.isRotateLeft()) {
-            position.setAngle(position.getAngle() - 1);
+            position.setRotateAngle(position.getRotateAngle() - 1);
         }
         if (keyboardInput.isRotateRight()) {
-            position.setAngle(position.getAngle() + 1);
+            position.setRotateAngle(position.getRotateAngle() + 1);
+        }
+        if (keyboardInput.isRight()) {
+            position.setMoveAngle(position.getMoveAngle() + 1);
+        }
+        if (keyboardInput.isLeft()) {
+            position.setMoveAngle(position.getMoveAngle() - 1);
         }
     }
 }

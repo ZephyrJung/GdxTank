@@ -27,18 +27,19 @@ public class Tank {
         Position headPos = new Position();
         headPos.setX(position.getX());
         headPos.setY(position.getY());
-        headPos.setAngle(position.getAngle());
+        headPos.setRotateAngle(position.getRotateAngle());
         drawHead(headPos, head.radius, head.segments);
 
         Position bodyPos = new Position();
         bodyPos.setX(position.getX() - body.width / 2f);
         bodyPos.setY(position.getY() - body.height / 2f);
-        drawBody(bodyPos, body.width, body.height);
+        bodyPos.setMoveAngle(position.getMoveAngle());
+        drawBody(bodyPos, body.width, body.height, position.getX() - bodyPos.getX(), position.getY() - bodyPos.getY());
 
         Position weaponPos = new Position();
         weaponPos.setX(headPos.getX() - weapon.width / 2f);
         weaponPos.setY(headPos.getY() + head.radius - 3f);
-        weaponPos.setAngle(position.getAngle());
+        weaponPos.setRotateAngle(position.getRotateAngle());
         drawWeapon(weaponPos, weapon.width, weapon.height, position.getX() - weaponPos.getX(), position.getY() - weaponPos.getY());
     }
 
@@ -49,18 +50,18 @@ public class Tank {
         circle.draw(shapeRenderer);
     }
 
-    private void drawBody(Position position, float width, float height) {
+    private void drawBody(Position position, float width, float height, float x, float y) {
         Rectangle rectangle = new Rectangle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
         rectangle.setWidth(width);
         rectangle.setHeight(height);
-        rectangle.draw(shapeRenderer);
+        rectangle.draw(shapeRenderer, x, y, position.getMoveAngle());
     }
 
     private void drawWeapon(Position position, float width, float height, float x, float y) {
         Rectangle rectangle = new Rectangle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
         rectangle.setWidth(width);
         rectangle.setHeight(height);
-        rectangle.draw(shapeRenderer, x, y);
+        rectangle.draw(shapeRenderer, x, y, position.getRotateAngle());
     }
 
     @Data

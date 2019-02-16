@@ -30,10 +30,10 @@ public class Rectangle extends Shape {
         shapeRenderer.end();
     }
 
-    public void draw(ShapeRenderer shapeRenderer, float x, float y) {
+    public void draw(ShapeRenderer shapeRenderer, float x, float y, float angle) {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
-        shapeRenderer.rect(position.getX(), position.getY(), width, height, x, y, position.getAngle());
+        shapeRenderer.rect(position.getX(), position.getY(), width, height, x, y, angle);
         log.debug("Rectangle Position:{}", position);
         shapeRenderer.end();
     }
