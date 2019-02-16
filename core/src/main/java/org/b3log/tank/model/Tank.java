@@ -39,7 +39,7 @@ public class Tank {
         weaponPos.setX(headPos.getX() - weapon.width / 2f);
         weaponPos.setY(headPos.getY() + head.radius - 3f);
         weaponPos.setAngle(position.getAngle());
-        drawWeapon(weaponPos, weapon.width, weapon.height, position.getX(), position.getY());
+        drawWeapon(weaponPos, weapon.width, weapon.height, position.getX() - weaponPos.getX(), position.getY() - weaponPos.getY());
     }
 
     private void drawHead(Position position, float radius, int segments) {

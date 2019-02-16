@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
@@ -40,20 +41,13 @@ public class GdxTank implements ApplicationListener {
         elapsed += Gdx.graphics.getDeltaTime();
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-////        batch.begin();
-////        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
-////        batch.end();
+//        batch.begin();
+//        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
+//        batch.end();
         moveControl();
         log.debug("moveControl:> input:{}, position:{}", keyboardInput, position);
         Tank tank = new Tank(shapeRenderer, position);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
-        shapeRenderer.point(position.getX(),position.getY(),0);
-        shapeRenderer.end();
         tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
-//        shapeRenderer.setColor(Color.WHITE);
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        shapeRenderer.rect(100, 100, 100, 50,100,100,-30);
-//        shapeRenderer.end();
     }
 
     @Override
