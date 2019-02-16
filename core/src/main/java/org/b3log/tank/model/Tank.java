@@ -27,15 +27,19 @@ public class Tank {
         Position headPos = new Position();
         headPos.setX(position.getX());
         headPos.setY(position.getY());
+        headPos.setAngle(position.getAngle());
         drawHead(headPos, head.radius, head.segments);
+
         Position bodyPos = new Position();
         bodyPos.setX(position.getX() - body.width / 2f);
         bodyPos.setY(position.getY() - body.height / 2f);
         drawBody(bodyPos, body.width, body.height);
+
         Position weaponPos = new Position();
         weaponPos.setX(headPos.getX() - weapon.width / 2f);
         weaponPos.setY(headPos.getY() + head.radius - 3f);
-        drawBody(weaponPos, weapon.width, weapon.height);
+        weaponPos.setAngle(position.getAngle());
+        drawWeapon(weaponPos, weapon.width, weapon.height, position.getX(), position.getY());
     }
 
     private void drawHead(Position position, float radius, int segments) {
@@ -50,6 +54,13 @@ public class Tank {
         rectangle.setWidth(width);
         rectangle.setHeight(height);
         rectangle.draw(shapeRenderer);
+    }
+
+    private void drawWeapon(Position position, float width, float height, float x, float y) {
+        Rectangle rectangle = new Rectangle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
+        rectangle.setWidth(width);
+        rectangle.setHeight(height);
+        rectangle.draw(shapeRenderer, x, y);
     }
 
     @Data

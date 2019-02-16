@@ -2,6 +2,7 @@ package org.b3log.tank.core;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
+import org.b3log.tank.model.common.KeyboardInput;
 import org.b3log.tank.model.common.Position;
 
 @Slf4j
@@ -17,13 +19,15 @@ public class GdxTank implements ApplicationListener {
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private float elapsed;
+    private KeyboardInput keyboardInput = new KeyboardInput();
+    private Position position = Position.of(50, 50);
 
     @Override
     public void create() {
         texture = new Texture(Gdx.files.internal("libgdx-logo.png"));
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
-        Gdx.input.setInputProcessor(new KeyboardProcessor());
+        Gdx.input.setInputProcessor(new KeyboardProcessor(keyboardInput));
     }
 
     @Override
@@ -36,11 +40,20 @@ public class GdxTank implements ApplicationListener {
         elapsed += Gdx.graphics.getDeltaTime();
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
-        batch.end();
-        Tank tank = new Tank(shapeRenderer, Position.of(50, 50));
+////        batch.begin();
+////        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
+////        batch.end();
+        moveControl();
+        log.debug("moveControl:> input:{}, position:{}", keyboardInput, position);
+        Tank tank = new Tank(shapeRenderer, position);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Point);
+        shapeRenderer.point(position.getX(),position.getY(),0);
+        shapeRenderer.end();
         tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
+//        shapeRenderer.setColor(Color.WHITE);
+//        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+//        shapeRenderer.rect(100, 100, 100, 50,100,100,-30);
+//        shapeRenderer.end();
     }
 
     @Override
@@ -56,5 +69,26 @@ public class GdxTank implements ApplicationListener {
     @Override
     public void dispose() {
         log.debug("Game Disposed");
+    }
+
+    private void moveControl() {
+        if (keyboardInput.isUp()) {
+            position.setY(position.getY() + 1);
+        }
+        if (keyboardInput.isDown()) {
+            position.setY(position.getY() - 1);
+        }
+        if (keyboardInput.isLeft()) {
+            position.setX(position.getX() - 1);
+        }
+        if (keyboardInput.isRight()) {
+            position.setX(position.getX() + 1);
+        }
+        if (keyboardInput.isRotateLeft()) {
+            position.setAngle(position.getAngle() - 1);
+        }
+        if (keyboardInput.isRotateRight()) {
+            position.setAngle(position.getAngle() + 1);
+        }
     }
 }

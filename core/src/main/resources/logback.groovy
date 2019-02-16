@@ -65,4 +65,4 @@ logger("com.xstore.order.middleware.server.infrastructure.order.message.OrderMes
 logger("com.xstore.order.middleware.server.infrastructure.order.message.OrderUmsNotify", INFO, ["BINLOG_BIZ_LOG"], true)
 
 
-root(DEBUG, ["CONSOLE", "FILE-ALL", "FILE-ERROR"])
+root(INFO, ["CONSOLE", "FILE-ALL", "FILE-ERROR"])

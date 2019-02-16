@@ -3,6 +3,7 @@ package org.b3log.tank.model.components;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.model.common.Position;
 
 /**
@@ -11,6 +12,7 @@ import org.b3log.tank.model.common.Position;
  * Email : zephyrjung@126.com
  **/
 @Data
+@Slf4j
 public class Rectangle extends Shape {
     private float width;
     private float height;
@@ -24,6 +26,15 @@ public class Rectangle extends Shape {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
         shapeRenderer.rect(position.getX(), position.getY(), width, height);
+        log.debug("Rectangle Position:{}", position);
+        shapeRenderer.end();
+    }
+
+    public void draw(ShapeRenderer shapeRenderer, float x, float y) {
+        shapeRenderer.setColor(color);
+        shapeRenderer.begin(shapeType);
+        shapeRenderer.rect(position.getX(), position.getY(), width, height, x, y, position.getAngle());
+        log.debug("Rectangle Position:{}", position);
         shapeRenderer.end();
     }
 }

@@ -11,6 +11,7 @@ import lombok.Data;
 public class Position {
     private float x;
     private float y;
+    private float angle;
 
     public static Position of(int x, int y) {
         Position position = new Position();
