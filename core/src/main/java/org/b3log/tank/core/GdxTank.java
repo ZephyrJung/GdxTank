@@ -13,14 +13,19 @@ import org.b3log.tank.model.Tank;
 import org.b3log.tank.model.common.KeyboardInput;
 import org.b3log.tank.model.common.Position;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Slf4j
 public class GdxTank implements ApplicationListener {
+    private String player = "zephyr";
     private Texture texture;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private float elapsed;
     private KeyboardInput keyboardInput = new KeyboardInput();
     private Position position = Position.of(50, 50);
+    private Map<String, Position> positions = new ConcurrentHashMap<>();
 
     @Override
     public void create() {
@@ -28,6 +33,11 @@ public class GdxTank implements ApplicationListener {
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         Gdx.input.setInputProcessor(new KeyboardProcessor(keyboardInput));
+        positions.put("test1", Position.of(100, 100));
+        positions.put("test2", Position.of(200, 200));
+        positions.put("test3", Position.of(300, 300));
+        positions.put("test4", Position.of(150, 200));
+        positions.put("test5", Position.of(250, 150));
     }
 
     @Override
@@ -44,9 +54,9 @@ public class GdxTank implements ApplicationListener {
 //        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
 //        batch.end();
         moveControl();
-        log.trace("moveControl:> input:{}, position:{}", keyboardInput, position);
         Tank tank = new Tank(shapeRenderer, position);
         tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
+        updatePositions(positions);
     }
 
     @Override
@@ -86,6 +96,18 @@ public class GdxTank implements ApplicationListener {
         }
         if (keyboardInput.isLeft()) {
             position.setMoveAngle(position.getMoveAngle() + 1);
+        }
+    }
+
+    private void updatePositions(Map<String, Position> positions) {
+        for (Map.Entry<String, Position> positionMap : positions.entrySet()) {
+            Position position = positionMap.getValue();
+            position.setX(position.getX()+MathUtils.random(-5, 5));
+            position.setY(position.getY()+MathUtils.random(-5, 5));
+            position.setRotateAngle(MathUtils.random(-10, 10));
+            position.setMoveAngle(MathUtils.random(-10, 10));
+            Tank tank = new Tank(shapeRenderer, position);
+            tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
         }
     }
 }
