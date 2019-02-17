@@ -2,12 +2,11 @@ package org.b3log.tank.core;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.MathUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
@@ -45,7 +44,7 @@ public class GdxTank implements ApplicationListener {
 //        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
 //        batch.end();
         moveControl();
-        log.debug("moveControl:> input:{}, position:{}", keyboardInput, position);
+        log.trace("moveControl:> input:{}, position:{}", keyboardInput, position);
         Tank tank = new Tank(shapeRenderer, position);
         tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
     }
@@ -67,30 +66,26 @@ public class GdxTank implements ApplicationListener {
 
     private void moveControl() {
         if (keyboardInput.isUp()) {
-            position.setY(position.getY() + 1 * (float) Math.cos(position.getMoveAngle()));
-            position.setX(position.getX() + 1 * (float) Math.sin(position.getMoveAngle()));
+            position.setY(position.getY() + 1 * MathUtils.cosDeg(position.getMoveAngle()));
+            //TODO 预期应该用加法，但是实际移动反向，具体原因未细查
+            position.setX(position.getX() - 1 * MathUtils.sinDeg(position.getMoveAngle()));
+
         }
         if (keyboardInput.isDown()) {
-            position.setY(position.getY() - 1 * (float) Math.cos(position.getMoveAngle()));
-            position.setX(position.getX() - 1 * (float) Math.sin(position.getMoveAngle()));
+            position.setY(position.getY() - 1 * MathUtils.cosDeg(position.getMoveAngle()));
+            position.setX(position.getX() + 1 * MathUtils.sinDeg(position.getMoveAngle()));
         }
-//        if (keyboardInput.isLeft()) {
-//            position.setX(position.getX() - 1);
-//        }
-//        if (keyboardInput.isRight()) {
-//            position.setX(position.getX() + 1);
-//        }
         if (keyboardInput.isRotateLeft()) {
-            position.setRotateAngle(position.getRotateAngle() - 1);
-        }
-        if (keyboardInput.isRotateRight()) {
             position.setRotateAngle(position.getRotateAngle() + 1);
         }
+        if (keyboardInput.isRotateRight()) {
+            position.setRotateAngle(position.getRotateAngle() - 1);
+        }
         if (keyboardInput.isRight()) {
-            position.setMoveAngle(position.getMoveAngle() + 1);
+            position.setMoveAngle(position.getMoveAngle() - 1);
         }
         if (keyboardInput.isLeft()) {
-            position.setMoveAngle(position.getMoveAngle() - 1);
+            position.setMoveAngle(position.getMoveAngle() + 1);
         }
     }
 }

@@ -166,5 +166,6 @@
 
     <modules>
         <module>core</module>
+        <module>server</module>
     </modules>
 </project>
