@@ -24,7 +24,6 @@ public class Circle extends Shape {
 
     @Override
     public void draw(ShapeRenderer shapeRenderer) {
-        log.debug("Circle Position:{}", position);
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
         if (this.segments < 0) {

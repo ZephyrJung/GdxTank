@@ -26,7 +26,6 @@ public class Rectangle extends Shape {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
         shapeRenderer.rect(position.getX(), position.getY(), width, height);
-        log.debug("Rectangle Position:{}", position);
         shapeRenderer.end();
     }
 
@@ -34,7 +33,6 @@ public class Rectangle extends Shape {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
         shapeRenderer.rect(position.getX(), position.getY(), width, height, x, y, angle);
-        log.debug("Rectangle Position:{}", position);
         shapeRenderer.end();
     }
 }

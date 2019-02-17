@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.b3log.tank.client.GameClient;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
 import org.b3log.tank.model.common.KeyboardInput;
@@ -26,6 +27,7 @@ public class GdxTank implements ApplicationListener {
     private KeyboardInput keyboardInput = new KeyboardInput();
     private Position position = Position.of(50, 50);
     private Map<String, Position> positions = new ConcurrentHashMap<>();
+    private GameClient gameClient = new GameClient("localhost", 8080, position, positions);
 
     @Override
     public void create() {
@@ -57,6 +59,9 @@ public class GdxTank implements ApplicationListener {
         Tank tank = new Tank(shapeRenderer, position);
         tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
         updatePositions(positions);
+        gameClient.setPosition(position);
+        gameClient.setPositionMap(positions);
+        gameClient.run();
     }
 
     @Override
@@ -102,8 +107,8 @@ public class GdxTank implements ApplicationListener {
     private void updatePositions(Map<String, Position> positions) {
         for (Map.Entry<String, Position> positionMap : positions.entrySet()) {
             Position position = positionMap.getValue();
-            position.setX(position.getX()+MathUtils.random(-5, 5));
-            position.setY(position.getY()+MathUtils.random(-5, 5));
+            position.setX(position.getX() + MathUtils.random(-5, 5));
+            position.setY(position.getY() + MathUtils.random(-5, 5));
             position.setRotateAngle(MathUtils.random(-10, 10));
             position.setMoveAngle(MathUtils.random(-10, 10));
             Tank tank = new Tank(shapeRenderer, position);
