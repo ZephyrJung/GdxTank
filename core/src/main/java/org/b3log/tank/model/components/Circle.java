@@ -27,9 +27,9 @@ public class Circle extends Shape {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
         if (this.segments < 0) {
-            shapeRenderer.circle(gameData.getX(), gameData.getY(), radius);
+            shapeRenderer.circle(gameData.getPosition().getX(), gameData.getPosition().getY(), radius);
         } else {
-            shapeRenderer.circle(gameData.getX(), gameData.getY(), radius, segments);
+            shapeRenderer.circle(gameData.getPosition().getX(), gameData.getPosition().getY(), radius, segments);
         }
         shapeRenderer.end();
     }

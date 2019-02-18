@@ -90,14 +90,14 @@ public class GdxTank implements ApplicationListener {
 
     private void moveControl() {
         if (keyboardInput.isUp()) {
-            gameData.setY(gameData.getY() + 1 * MathUtils.cosDeg(gameData.getMoveAngle()));
+            gameData.getPosition().setY(gameData.getPosition().getY() + 1 * MathUtils.cosDeg(gameData.getMoveAngle()));
             //TODO 预期应该用加法，但是实际移动反向，具体原因未细查
-            gameData.setX(gameData.getX() - 1 * MathUtils.sinDeg(gameData.getMoveAngle()));
+            gameData.getPosition().setX(gameData.getPosition().getX() - 1 * MathUtils.sinDeg(gameData.getMoveAngle()));
 
         }
         if (keyboardInput.isDown()) {
-            gameData.setY(gameData.getY() - 1 * MathUtils.cosDeg(gameData.getMoveAngle()));
-            gameData.setX(gameData.getX() + 1 * MathUtils.sinDeg(gameData.getMoveAngle()));
+            gameData.getPosition().setY(gameData.getPosition().getY() - 1 * MathUtils.cosDeg(gameData.getMoveAngle()));
+            gameData.getPosition().setX(gameData.getPosition().getX() + 1 * MathUtils.sinDeg(gameData.getMoveAngle()));
         }
         if (keyboardInput.isRotateLeft()) {
             gameData.setRotateAngle(gameData.getRotateAngle() + 1);

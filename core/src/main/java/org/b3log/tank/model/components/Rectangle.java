@@ -25,14 +25,14 @@ public class Rectangle extends Shape {
     public void draw(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
-        shapeRenderer.rect(gameData.getX(), gameData.getY(), width, height);
+        shapeRenderer.rect(gameData.getPosition().getX(), gameData.getPosition().getY(), width, height);
         shapeRenderer.end();
     }
 
     public void draw(ShapeRenderer shapeRenderer, float x, float y, float angle) {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
-        shapeRenderer.rect(gameData.getX(), gameData.getY(), width, height, x, y, angle);
+        shapeRenderer.rect(gameData.getPosition().getX(), gameData.getPosition().getY(), width, height, x, y, angle);
         shapeRenderer.end();
     }
 }

@@ -25,22 +25,22 @@ public class Tank {
 
     public void draw(Head head, Body body, Weapon weapon) {
         GameData headPos = new GameData();
-        headPos.setX(gameData.getX());
-        headPos.setY(gameData.getY());
+        headPos.getPosition().setX(gameData.getPosition().getX());
+        headPos.getPosition().setY(gameData.getPosition().getY());
         headPos.setRotateAngle(gameData.getRotateAngle());
         drawHead(headPos, head.radius, head.segments);
 
         GameData bodyPos = new GameData();
-        bodyPos.setX(gameData.getX() - body.width / 2f);
-        bodyPos.setY(gameData.getY() - body.height / 2f);
+        bodyPos.getPosition().setX(gameData.getPosition().getX() - body.width / 2f);
+        bodyPos.getPosition().setY(gameData.getPosition().getY() - body.height / 2f);
         bodyPos.setMoveAngle(gameData.getMoveAngle());
-        drawBody(bodyPos, body.width, body.height, gameData.getX() - bodyPos.getX(), gameData.getY() - bodyPos.getY());
+        drawBody(bodyPos, body.width, body.height, gameData.getPosition().getX() - bodyPos.getPosition().getX(), gameData.getPosition().getY() - bodyPos.getPosition().getY());
 
         GameData weaponPos = new GameData();
-        weaponPos.setX(headPos.getX() - weapon.width / 2f);
-        weaponPos.setY(headPos.getY() + head.radius - 3f);
+        weaponPos.getPosition().setX(headPos.getPosition().getX() - weapon.width / 2f);
+        weaponPos.getPosition().setY(headPos.getPosition().getY() + head.radius - 3f);
         weaponPos.setRotateAngle(gameData.getRotateAngle());
-        drawWeapon(weaponPos, weapon.width, weapon.height, gameData.getX() - weaponPos.getX(), gameData.getY() - weaponPos.getY());
+        drawWeapon(weaponPos, weapon.width, weapon.height, gameData.getPosition().getX() - weaponPos.getPosition().getX(), gameData.getPosition().getY() - weaponPos.getPosition().getY());
     }
 
     private void drawHead(GameData gameData, float radius, int segments) {
