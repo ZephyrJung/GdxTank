@@ -41,7 +41,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.b3log.tank.server.SerializationServer</mainClass>
+                            <mainClass>org.b3log.tank.server.GameServer</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

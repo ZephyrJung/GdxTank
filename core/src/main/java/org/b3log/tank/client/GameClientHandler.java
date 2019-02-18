@@ -12,7 +12,7 @@ import org.b3log.tank.model.common.GameData;
 import java.util.Map;
 
 @Slf4j
-public class SerializationClientHandler extends SimpleChannelInboundHandler<Object> {
+public class GameClientHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object obj)

@@ -32,7 +32,7 @@ public class GameClient extends Thread {
             Bootstrap bootstrap = new Bootstrap()
                     .group(group)
                     .channel(NioSocketChannel.class)
-                    .handler(new SerializationClientHandlerInitializer());
+                    .handler(new GameClientHandlerInitializer());
             channel = bootstrap.connect(host, port).sync().channel();
             channel.closeFuture().sync();
         } catch (Exception e) {

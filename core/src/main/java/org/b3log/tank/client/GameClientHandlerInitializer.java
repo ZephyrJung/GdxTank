@@ -12,7 +12,7 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
  *
  * @author <a href="http://www.waylau.com">waylau.com</a> 2015年11月6日
  */
-public class SerializationClientHandlerInitializer extends
+public class GameClientHandlerInitializer extends
         ChannelInitializer<Channel> {
 
     private static final int MAX_OBJECT_SIZE = 1024 * 1024;
@@ -24,6 +24,6 @@ public class SerializationClientHandlerInitializer extends
                 ClassResolvers.weakCachingConcurrentResolver(this.getClass()
                         .getClassLoader())));
         pipeline.addLast(new ObjectEncoder());
-        pipeline.addLast(new SerializationClientHandler());
+        pipeline.addLast(new GameClientHandler());
     }
 }

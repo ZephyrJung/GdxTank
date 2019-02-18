@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author <a href="http://www.waylau.com">waylau.com</a> 2015年11月6日
  */
-public final class SerializationServer {
+public final class GameServer {
 
     public static final Map<String, GameData> GAME_DATA_MAP = new ConcurrentHashMap<String, GameData>();
     static final int PORT = 8080;
@@ -35,7 +35,7 @@ public final class SerializationServer {
                     .option(ChannelOption.SO_BACKLOG, 100)
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new SerializationServerHandlerInitializer());
+                    .childHandler(new GameServerHandlerInitializer());
 
             // Start the server.
             ChannelFuture f = b.bind(PORT).sync();

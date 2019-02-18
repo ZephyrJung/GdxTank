@@ -20,13 +20,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class GdxTank implements ApplicationListener {
     private static volatile GdxTank gdxTank;
-    private String player = "zephyr2";
+    private String player = "zephyr" + MathUtils.random(1, 10);
     private Texture texture;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private float elapsed;
     private KeyboardInput keyboardInput = new KeyboardInput();
-    private GameData gameData = GameData.setPosition(player, 50, 50);
+    private GameData gameData = GameData.setPosition(player, MathUtils.random(10, 60), MathUtils.random(50, 100));
     private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
     private GameClient gameClient = new GameClient("localhost", 8080, null);
 
@@ -68,8 +68,8 @@ public class GdxTank implements ApplicationListener {
 //        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
 //        batch.end();
         moveControl();
-        Tank tank = new Tank(shapeRenderer, gameData);
-        tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
+//        Tank tank = new Tank(shapeRenderer, gameData);
+//        tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
         drawGameDatas();
     }
 
@@ -117,9 +117,6 @@ public class GdxTank implements ApplicationListener {
 
     private void drawGameDatas() {
         for (Map.Entry<String, GameData> positionMap : gameDataMap.entrySet()) {
-            if (positionMap.getKey().equalsIgnoreCase("zephyr")) {
-                continue;
-            }
             Tank tank = new Tank(shapeRenderer, positionMap.getValue());
             tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
         }

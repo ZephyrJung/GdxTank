@@ -7,7 +7,7 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 
-public class SerializationServerHandlerInitializer extends
+public class GameServerHandlerInitializer extends
 		ChannelInitializer<Channel> {
 
 	private final static int MAX_OBJECT_SIZE = 1024 * 1024;
@@ -19,6 +19,6 @@ public class SerializationServerHandlerInitializer extends
 				ClassResolvers.weakCachingConcurrentResolver(this.getClass()
 						.getClassLoader())));
 		pipeline.addLast(new ObjectEncoder());
-		pipeline.addLast(new SerializationServerHandler());
+		pipeline.addLast(new GameServerHandler());
 	}
 }
