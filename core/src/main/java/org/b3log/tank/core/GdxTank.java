@@ -27,7 +27,7 @@ public class GdxTank implements ApplicationListener {
     private KeyboardInput keyboardInput = new KeyboardInput();
     private Position position = Position.of(50, 50);
     private Map<String, Position> positions = new ConcurrentHashMap<>();
-    private GameClient gameClient = new GameClient("localhost", 8080, position, positions);
+    private GameClient gameClient = new GameClient("localhost", 8080, null);
 
     @Override
     public void create() {
@@ -40,6 +40,8 @@ public class GdxTank implements ApplicationListener {
         positions.put("test3", Position.of(300, 300));
         positions.put("test4", Position.of(150, 200));
         positions.put("test5", Position.of(250, 150));
+        gameClient.setDaemon(true);
+        gameClient.start();
     }
 
     @Override
@@ -59,9 +61,7 @@ public class GdxTank implements ApplicationListener {
         Tank tank = new Tank(shapeRenderer, position);
         tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
         updatePositions(positions);
-        gameClient.setPosition(position);
-        gameClient.setPositionMap(positions);
-        gameClient.run();
+        gameClient.notifyServer(position);
     }
 
     @Override

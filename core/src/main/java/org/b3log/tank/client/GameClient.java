@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.model.common.Position;
 
-import java.util.Map;
-
 /**
  * @author : yu.zhang
  * Date : 2019/2/17 3:50 PM
@@ -22,12 +20,12 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameClient {
+public class GameClient extends Thread {
     private String host = "localhost";
     private int port = 8080;
-    private Position position;
-    private Map<String, Position> positionMap;
+    private Channel channel;
 
+    @Override
     public void run() {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -35,14 +33,20 @@ public class GameClient {
                     .group(group)
                     .channel(NioSocketChannel.class)
                     .handler(new SerializationClientHandlerInitializer());
-            Channel channel = bootstrap.connect(host, port).sync().channel();
-            channel.writeAndFlush(position);
-            channel.flush();
+            channel = bootstrap.connect(host, port).sync().channel();
+            channel.closeFuture().sync();
         } catch (Exception e) {
             log.error("client error:{}", e);
         } finally {
             group.shutdownGracefully();
         }
+    }
 
+    public void notifyServer(Position position) {
+        if (channel == null) {
+            log.error("Channel not ready!");
+            return;
+        }
+        channel.writeAndFlush(position);
     }
 }

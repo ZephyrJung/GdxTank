@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.model.common.Position;
 
 @Slf4j
-public class SerializationClientHandler extends
-        SimpleChannelInboundHandler<Object> {
+public class SerializationClientHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object obj)
