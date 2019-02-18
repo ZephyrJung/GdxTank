@@ -34,12 +34,10 @@ public class GameClient {
             Bootstrap bootstrap = new Bootstrap()
                     .group(group)
                     .channel(NioSocketChannel.class)
-                    .handler(new SimpleChatClientInitializer());
+                    .handler(new SerializationClientHandlerInitializer());
             Channel channel = bootstrap.connect(host, port).sync().channel();
-            while (true) {
-//                log.debug("client position:{}", position);
-                channel.writeAndFlush(position);
-            }
+            channel.writeAndFlush(position);
+            channel.flush();
         } catch (Exception e) {
             log.error("client error:{}", e);
         } finally {
