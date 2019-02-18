@@ -19,8 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class GdxTank implements ApplicationListener {
-    private volatile static GdxTank gdxTank;
-    private String player = "zephyr";
+    private static volatile GdxTank gdxTank;
+    private String player = "zephyr2";
     private Texture texture;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;

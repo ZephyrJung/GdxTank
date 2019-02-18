@@ -8,14 +8,19 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.b3log.tank.model.common.GameData;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 说明：序列化服务器
  *
- * @author <a href="http://www.waylau.com">waylau.com</a> 2015年11月6日 
+ * @author <a href="http://www.waylau.com">waylau.com</a> 2015年11月6日
  */
 public final class SerializationServer {
 
+    public static final Map<String, GameData> GAME_DATA_MAP = new ConcurrentHashMap<String, GameData>();
     static final int PORT = 8080;
 
     public static void main(String[] args) throws Exception {
@@ -26,11 +31,11 @@ public final class SerializationServer {
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class)
-             .option(ChannelOption.SO_BACKLOG, 100)
-             .childOption(ChannelOption.SO_KEEPALIVE, true)
-             .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new SerializationServerHandlerInitializer());
+                    .channel(NioServerSocketChannel.class)
+                    .option(ChannelOption.SO_BACKLOG, 100)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .childHandler(new SerializationServerHandlerInitializer());
 
             // Start the server.
             ChannelFuture f = b.bind(PORT).sync();
