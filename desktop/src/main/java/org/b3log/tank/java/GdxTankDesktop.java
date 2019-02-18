@@ -8,6 +8,6 @@ import org.b3log.tank.core.GdxTank;
 public class GdxTankDesktop {
 	public static void main (String[] args) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new GdxTank(), config);
+		new LwjglApplication(GdxTank.getInstance(), config);
 	}
 }

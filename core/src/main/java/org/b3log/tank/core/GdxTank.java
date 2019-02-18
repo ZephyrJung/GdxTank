@@ -11,23 +11,38 @@ import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.client.GameClient;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
+import org.b3log.tank.model.common.GameData;
 import org.b3log.tank.model.common.KeyboardInput;
-import org.b3log.tank.model.common.Position;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class GdxTank implements ApplicationListener {
+    private volatile static GdxTank gdxTank;
     private String player = "zephyr";
     private Texture texture;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private float elapsed;
     private KeyboardInput keyboardInput = new KeyboardInput();
-    private Position position = Position.of(50, 50);
-    private Map<String, Position> positions = new ConcurrentHashMap<>();
+    private GameData gameData = GameData.setPosition(player, 50, 50);
+    private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
     private GameClient gameClient = new GameClient("localhost", 8080, null);
+
+    private GdxTank() {
+    }
+
+    public static GdxTank getInstance() {
+        if (gdxTank == null) {
+            synchronized (GdxTank.class) {
+                if (gdxTank == null) {
+                    gdxTank = new GdxTank();
+                }
+            }
+        }
+        return gdxTank;
+    }
 
     @Override
     public void create() {
@@ -35,11 +50,6 @@ public class GdxTank implements ApplicationListener {
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         Gdx.input.setInputProcessor(new KeyboardProcessor(keyboardInput));
-        positions.put("test1", Position.of(100, 100));
-        positions.put("test2", Position.of(200, 200));
-        positions.put("test3", Position.of(300, 300));
-        positions.put("test4", Position.of(150, 200));
-        positions.put("test5", Position.of(250, 150));
         gameClient.setDaemon(true);
         gameClient.start();
     }
@@ -58,10 +68,9 @@ public class GdxTank implements ApplicationListener {
 //        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
 //        batch.end();
         moveControl();
-        Tank tank = new Tank(shapeRenderer, position);
+        Tank tank = new Tank(shapeRenderer, gameData);
         tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
-        updatePositions(positions);
-        gameClient.notifyServer(position);
+        drawGameDatas();
     }
 
     @Override
@@ -81,38 +90,42 @@ public class GdxTank implements ApplicationListener {
 
     private void moveControl() {
         if (keyboardInput.isUp()) {
-            position.setY(position.getY() + 1 * MathUtils.cosDeg(position.getMoveAngle()));
+            gameData.setY(gameData.getY() + 1 * MathUtils.cosDeg(gameData.getMoveAngle()));
             //TODO 预期应该用加法，但是实际移动反向，具体原因未细查
-            position.setX(position.getX() - 1 * MathUtils.sinDeg(position.getMoveAngle()));
+            gameData.setX(gameData.getX() - 1 * MathUtils.sinDeg(gameData.getMoveAngle()));
 
         }
         if (keyboardInput.isDown()) {
-            position.setY(position.getY() - 1 * MathUtils.cosDeg(position.getMoveAngle()));
-            position.setX(position.getX() + 1 * MathUtils.sinDeg(position.getMoveAngle()));
+            gameData.setY(gameData.getY() - 1 * MathUtils.cosDeg(gameData.getMoveAngle()));
+            gameData.setX(gameData.getX() + 1 * MathUtils.sinDeg(gameData.getMoveAngle()));
         }
         if (keyboardInput.isRotateLeft()) {
-            position.setRotateAngle(position.getRotateAngle() + 1);
+            gameData.setRotateAngle(gameData.getRotateAngle() + 1);
         }
         if (keyboardInput.isRotateRight()) {
-            position.setRotateAngle(position.getRotateAngle() - 1);
+            gameData.setRotateAngle(gameData.getRotateAngle() - 1);
         }
         if (keyboardInput.isRight()) {
-            position.setMoveAngle(position.getMoveAngle() - 1);
+            gameData.setMoveAngle(gameData.getMoveAngle() - 1);
         }
         if (keyboardInput.isLeft()) {
-            position.setMoveAngle(position.getMoveAngle() + 1);
+            gameData.setMoveAngle(gameData.getMoveAngle() + 1);
+        }
+        //todo 考虑用切面实现动态通知
+        gameClient.notifyServer(gameData);
+    }
+
+    private void drawGameDatas() {
+        for (Map.Entry<String, GameData> positionMap : gameDataMap.entrySet()) {
+            if (positionMap.getKey().equalsIgnoreCase("zephyr")) {
+                continue;
+            }
+            Tank tank = new Tank(shapeRenderer, positionMap.getValue());
+            tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
         }
     }
 
-    private void updatePositions(Map<String, Position> positions) {
-        for (Map.Entry<String, Position> positionMap : positions.entrySet()) {
-            Position position = positionMap.getValue();
-            position.setX(position.getX() + MathUtils.random(-5, 5));
-            position.setY(position.getY() + MathUtils.random(-5, 5));
-            position.setRotateAngle(MathUtils.random(-10, 10));
-            position.setMoveAngle(MathUtils.random(-10, 10));
-            Tank tank = new Tank(shapeRenderer, position);
-            tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
-        }
+    public void updateGameDataMap(Map<String, GameData> gameDataMap) {
+        this.gameDataMap = gameDataMap;
     }
 }

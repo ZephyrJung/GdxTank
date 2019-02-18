@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.b3log.tank.model.common.Position;
+import org.b3log.tank.model.common.GameData;
 import org.b3log.tank.model.components.Circle;
 import org.b3log.tank.model.components.Rectangle;
 
@@ -19,49 +19,49 @@ import org.b3log.tank.model.components.Rectangle;
 @AllArgsConstructor
 public class Tank {
     private ShapeRenderer shapeRenderer;
-    private Position position;
+    private GameData gameData;
 //    private int level;
 //    private Color color;
 
     public void draw(Head head, Body body, Weapon weapon) {
-        Position headPos = new Position();
-        headPos.setX(position.getX());
-        headPos.setY(position.getY());
-        headPos.setRotateAngle(position.getRotateAngle());
+        GameData headPos = new GameData();
+        headPos.setX(gameData.getX());
+        headPos.setY(gameData.getY());
+        headPos.setRotateAngle(gameData.getRotateAngle());
         drawHead(headPos, head.radius, head.segments);
 
-        Position bodyPos = new Position();
-        bodyPos.setX(position.getX() - body.width / 2f);
-        bodyPos.setY(position.getY() - body.height / 2f);
-        bodyPos.setMoveAngle(position.getMoveAngle());
-        drawBody(bodyPos, body.width, body.height, position.getX() - bodyPos.getX(), position.getY() - bodyPos.getY());
+        GameData bodyPos = new GameData();
+        bodyPos.setX(gameData.getX() - body.width / 2f);
+        bodyPos.setY(gameData.getY() - body.height / 2f);
+        bodyPos.setMoveAngle(gameData.getMoveAngle());
+        drawBody(bodyPos, body.width, body.height, gameData.getX() - bodyPos.getX(), gameData.getY() - bodyPos.getY());
 
-        Position weaponPos = new Position();
+        GameData weaponPos = new GameData();
         weaponPos.setX(headPos.getX() - weapon.width / 2f);
         weaponPos.setY(headPos.getY() + head.radius - 3f);
-        weaponPos.setRotateAngle(position.getRotateAngle());
-        drawWeapon(weaponPos, weapon.width, weapon.height, position.getX() - weaponPos.getX(), position.getY() - weaponPos.getY());
+        weaponPos.setRotateAngle(gameData.getRotateAngle());
+        drawWeapon(weaponPos, weapon.width, weapon.height, gameData.getX() - weaponPos.getX(), gameData.getY() - weaponPos.getY());
     }
 
-    private void drawHead(Position position, float radius, int segments) {
-        Circle circle = new Circle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
+    private void drawHead(GameData gameData, float radius, int segments) {
+        Circle circle = new Circle(gameData, Color.WHITE, ShapeRenderer.ShapeType.Line);
         circle.setRadius(radius);
         circle.setSegments(segments);
         circle.draw(shapeRenderer);
     }
 
-    private void drawBody(Position position, float width, float height, float x, float y) {
-        Rectangle rectangle = new Rectangle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
+    private void drawBody(GameData gameData, float width, float height, float x, float y) {
+        Rectangle rectangle = new Rectangle(gameData, Color.WHITE, ShapeRenderer.ShapeType.Line);
         rectangle.setWidth(width);
         rectangle.setHeight(height);
-        rectangle.draw(shapeRenderer, x, y, position.getMoveAngle());
+        rectangle.draw(shapeRenderer, x, y, gameData.getMoveAngle());
     }
 
-    private void drawWeapon(Position position, float width, float height, float x, float y) {
-        Rectangle rectangle = new Rectangle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
+    private void drawWeapon(GameData gameData, float width, float height, float x, float y) {
+        Rectangle rectangle = new Rectangle(gameData, Color.WHITE, ShapeRenderer.ShapeType.Line);
         rectangle.setWidth(width);
         rectangle.setHeight(height);
-        rectangle.draw(shapeRenderer, x, y, position.getRotateAngle());
+        rectangle.draw(shapeRenderer, x, y, gameData.getRotateAngle());
     }
 
     @Data

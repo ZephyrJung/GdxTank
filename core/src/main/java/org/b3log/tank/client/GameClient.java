@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.b3log.tank.model.common.Position;
+import org.b3log.tank.model.common.GameData;
 
 /**
  * @author : yu.zhang
@@ -42,11 +42,11 @@ public class GameClient extends Thread {
         }
     }
 
-    public void notifyServer(Position position) {
+    public void notifyServer(GameData gameData) {
         if (channel == null) {
             log.error("Channel not ready!");
             return;
         }
-        channel.writeAndFlush(position);
+        channel.writeAndFlush(gameData);
     }
 }
