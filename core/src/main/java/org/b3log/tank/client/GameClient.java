@@ -21,6 +21,7 @@ import org.b3log.tank.model.common.GameData;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameClient extends Thread {
+//    private String host = "118.24.156.69";
     private String host = "localhost";
     private int port = 8080;
     private Channel channel;

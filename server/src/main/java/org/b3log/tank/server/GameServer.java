@@ -9,7 +9,10 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.b3log.tank.model.common.GameData;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,12 +21,14 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author <a href="http://www.waylau.com">waylau.com</a> 2015年11月6日
  */
+@Service
 public final class GameServer {
+    private static int PORT = 8080;
 
     public static final Map<String, GameData> GAME_DATA_MAP = new ConcurrentHashMap<String, GameData>();
-    static final int PORT = 8080;
 
-    public static void main(String[] args) throws Exception {
+    @PostConstruct
+    public static void serviceStart() throws Exception {
 
         // Configure the server.
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);

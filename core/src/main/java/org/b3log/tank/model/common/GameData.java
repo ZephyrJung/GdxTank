@@ -17,7 +17,6 @@ public class GameData implements Serializable {
     private Position position = new Position();
     private float moveAngle;
     private float rotateAngle;
-    private Map<String, Queue<Position>> bullets;
 
     public static GameData setPosition(String playerId, int x, int y) {
         GameData gameData = new GameData();
