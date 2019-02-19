@@ -15,7 +15,7 @@ public class GameServerHandlerInitializer extends
 	@Override
 	protected void initChannel(Channel ch) throws Exception {
 		ChannelPipeline pipeline = ch.pipeline();
-		pipeline.addLast(new ObjectDecoder(MAX_OBJECT_SIZE,
+		pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE,
 				ClassResolvers.weakCachingConcurrentResolver(this.getClass()
 						.getClassLoader())));
 		pipeline.addLast(new ObjectEncoder());
