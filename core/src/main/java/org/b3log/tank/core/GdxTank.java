@@ -69,8 +69,10 @@ public class GdxTank implements ApplicationListener {
 //        batch.draw(texture, 100 + 100 * (float) Math.cos(elapsed), 100 + 25 * (float) Math.sin(elapsed));
 //        batch.end();
         moveControl();
-//        Tank tank = new Tank(shapeRenderer, gameData);
+        fireControl();
+//        Tank tank = new Tank(shapeRenderer, position);
 //        tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
+        gameClient.notifyServer(gameData);
         drawGameDatas();
     }
 
@@ -91,14 +93,14 @@ public class GdxTank implements ApplicationListener {
 
     private void moveControl() {
         if (keyboardInput.isUp()) {
-            gameData.getPosition().setY(gameData.getPosition().getY() + 1 * MathUtils.cosDeg(gameData.getMoveAngle()));
+            gameData.getPosition().setY(gameData.getPosition().getY() + 1 * MathUtils.cosDeg(gameData.getPosition().getMoveAngle()));
             //TODO 预期应该用加法，但是实际移动反向，具体原因未细查
-            gameData.getPosition().setX(gameData.getPosition().getX() - 1 * MathUtils.sinDeg(gameData.getMoveAngle()));
+            gameData.getPosition().setX(gameData.getPosition().getX() - 1 * MathUtils.sinDeg(gameData.getPosition().getMoveAngle()));
 
         }
         if (keyboardInput.isDown()) {
-            gameData.getPosition().setY(gameData.getPosition().getY() - 1 * MathUtils.cosDeg(gameData.getMoveAngle()));
-            gameData.getPosition().setX(gameData.getPosition().getX() + 1 * MathUtils.sinDeg(gameData.getMoveAngle()));
+            gameData.getPosition().setY(gameData.getPosition().getY() - 1 * MathUtils.cosDeg(gameData.getPosition().getMoveAngle()));
+            gameData.getPosition().setX(gameData.getPosition().getX() + 1 * MathUtils.sinDeg(gameData.getPosition().getMoveAngle()));
         }
         if (keyboardInput.isRotateLeft()) {
             gameData.setRotateAngle(gameData.getRotateAngle() + 1);
@@ -107,13 +109,17 @@ public class GdxTank implements ApplicationListener {
             gameData.setRotateAngle(gameData.getRotateAngle() - 1);
         }
         if (keyboardInput.isRight()) {
-            gameData.setMoveAngle(gameData.getMoveAngle() - 1);
+            gameData.getPosition().setMoveAngle(gameData.getPosition().getMoveAngle() - 1);
         }
         if (keyboardInput.isLeft()) {
-            gameData.setMoveAngle(gameData.getMoveAngle() + 1);
+            gameData.getPosition().setMoveAngle(gameData.getPosition().getMoveAngle() + 1);
         }
-        //todo 考虑用切面实现动态通知
-        gameClient.notifyServer(gameData);
+    }
+
+    private void fireControl(){
+        if(keyboardInput.isAttack()){
+            gameData.getFireBalls().add(gameData.getPosition());
+        }
     }
 
     private void drawGameDatas() {

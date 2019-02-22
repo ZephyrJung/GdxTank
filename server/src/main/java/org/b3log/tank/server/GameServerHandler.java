@@ -38,7 +38,7 @@ public class GameServerHandler extends SimpleChannelInboundHandler<Object> {
             gameData.getPosition().setX(gameData.getPosition().getX() + MathUtils.random(-5, 5));
             gameData.getPosition().setY(gameData.getPosition().getY() + MathUtils.random(-5, 5));
             gameData.setRotateAngle(MathUtils.random(-10, 10));
-            gameData.setMoveAngle(MathUtils.random(-10, 10));
+            gameData.getPosition().setMoveAngle(MathUtils.random(-10, 10));
         }
     }
 }

@@ -39,6 +39,12 @@ public class KeyboardProcessor extends InputAdapter {
         if (keycode == Input.Keys.E) {
             input.setRotateRight(true);
         }
+        if (keycode == Input.Keys.J) {
+            input.setAttack(true);
+        }
+        if (keycode == Input.Keys.K) {
+            input.setReset(true);
+        }
         return true;
     }
 
@@ -61,6 +67,12 @@ public class KeyboardProcessor extends InputAdapter {
         }
         if (keycode == Input.Keys.E) {
             input.setRotateRight(false);
+        }
+        if (keycode == Input.Keys.J) {
+            input.setAttack(false);
+        }
+        if (keycode == Input.Keys.K) {
+            input.setReset(false);
         }
         return true;
     }

@@ -3,7 +3,7 @@ package org.b3log.tank.model.common;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -15,26 +15,13 @@ import java.util.Queue;
 public class GameData implements Serializable {
     private String playerId;
     private Position position = new Position();
-    private float moveAngle;
     private float rotateAngle;
+    private Queue<Position> fireBalls = new LinkedList<>();
 
     public static GameData setPosition(String playerId, int x, int y) {
         GameData gameData = new GameData();
         gameData.setPlayerId(playerId);
         gameData.setPosition(Position.of(x, y));
         return gameData;
-    }
-
-    @Data
-    public static class Position implements Serializable {
-        private float x;
-        private float y;
-
-        public static Position of(float x, float y) {
-            Position position = new Position();
-            position.x = x;
-            position.y = y;
-            return position;
-        }
     }
 }

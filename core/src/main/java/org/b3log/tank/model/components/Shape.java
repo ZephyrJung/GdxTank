@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.b3log.tank.model.common.GameData;
+import org.b3log.tank.model.common.Position;
 
 /**
  * @author : yu.zhang
@@ -16,7 +16,7 @@ import org.b3log.tank.model.common.GameData;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class Shape {
-    protected GameData gameData;
+    protected Position position;
     protected Color color;
     protected ShapeRenderer.ShapeType shapeType;
 

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.b3log.tank.model.common.GameData;
+import org.b3log.tank.model.common.Position;
 
 /**
  * @author : yu.zhang
@@ -18,8 +18,8 @@ public class Circle extends Shape {
     private float radius;
     private int segments;
 
-    public Circle(GameData gameData, Color color, ShapeRenderer.ShapeType shapeType) {
-        super(gameData, color, shapeType);
+    public Circle(Position position, Color color, ShapeRenderer.ShapeType shapeType) {
+        super(position, color, shapeType);
     }
 
     @Override
@@ -27,9 +27,9 @@ public class Circle extends Shape {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
         if (this.segments < 0) {
-            shapeRenderer.circle(gameData.getPosition().getX(), gameData.getPosition().getY(), radius);
+            shapeRenderer.circle(position.getX(), position.getY(), radius);
         } else {
-            shapeRenderer.circle(gameData.getPosition().getX(), gameData.getPosition().getY(), radius, segments);
+            shapeRenderer.circle(position.getX(), position.getY(), radius, segments);
         }
         shapeRenderer.end();
     }
