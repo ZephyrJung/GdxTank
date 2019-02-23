@@ -2,6 +2,7 @@ package org.b3log.tank.model;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,6 @@ public class Tank {
     private ShapeRenderer shapeRenderer;
     private GameData gameData;
     private Integer level = 0;
-//    private Color color;
 
     public void draw() {
         TankInfo tankInfo = Level.fromCode(level).getTankInfo();
@@ -47,10 +47,13 @@ public class Tank {
     }
 
     public void fire() {
-//        gameData.getFireBalls().forEach((Position fb) -> {
-//            TankInfo.Fire fire = new TankInfo.Fire();
-//            drawFire(fire);
-//        });
+        TankInfo tankInfo = Level.fromCode(level).getTankInfo();
+        gameData.getFireBalls().forEach((Position fb) -> {
+            //todo
+            fb.setX(fb.getX() + (tankInfo.getWeapon().getHeight() + tankInfo.getHead().getRadius()) * MathUtils.cosDeg(fb.getMoveAngle()));
+            fb.setY(fb.getY() + (tankInfo.getWeapon().getHeight() + tankInfo.getHead().getRadius()) * MathUtils.sinDeg(fb.getMoveAngle()));
+            drawFire(tankInfo.getFire(), fb);
+        });
     }
 
     private void drawFire(TankInfo.Fire fire, Position position) {

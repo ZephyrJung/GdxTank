@@ -22,6 +22,7 @@ public class TankInfo {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Head {
+        //Color
         private float radius = 16;
         private int segments = 6;
     }

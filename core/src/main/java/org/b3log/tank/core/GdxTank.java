@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import javafx.geometry.Pos;
 import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.client.GameClient;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
 import org.b3log.tank.model.common.GameData;
 import org.b3log.tank.model.common.KeyboardInput;
+import org.b3log.tank.model.common.Position;
 import org.b3log.tank.model.constants.Level;
 
 import java.util.Map;
@@ -119,12 +121,9 @@ public class GdxTank implements ApplicationListener {
 
     private void fireControl() {
         if (keyboardInput.isAttack()) {
-//            Position position = gameData.getPosition();
-//            position.setX(fb.getX() + (weapon.height + head.radius) * MathUtils.sinDeg(fb.getMoveAngle()));
-//            position.setY(fb.getY() + (weapon.height + head.radius) * MathUtils.cosDeg(fb.getMoveAngle()));
-//            gameData.getFireBalls().add(Position.of(
-//                    position.getX() +
-//            ));
+            Position position = Position.of(gameData.getPosition().getX(), gameData.getPosition().getY());
+            position.setMoveAngle(gameData.getRotateAngle());
+            gameData.getFireBalls().add(position);
         }
     }
 
