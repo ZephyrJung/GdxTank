@@ -13,9 +13,10 @@ import java.util.Queue;
  **/
 @Data
 public class GameData implements Serializable {
+    private Integer level = 0;
     private String playerId;
     private Position position = new Position();
-    private float rotateAngle;
+    private Float rotateAngle = 0f;
     private Queue<Position> fireBalls = new LinkedList<>();
 
     public static GameData setPosition(String playerId, int x, int y) {

@@ -13,6 +13,7 @@ import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
 import org.b3log.tank.model.common.GameData;
 import org.b3log.tank.model.common.KeyboardInput;
+import org.b3log.tank.model.constants.Level;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -116,16 +117,24 @@ public class GdxTank implements ApplicationListener {
         }
     }
 
-    private void fireControl(){
-        if(keyboardInput.isAttack()){
-            gameData.getFireBalls().add(gameData.getPosition());
+    private void fireControl() {
+        if (keyboardInput.isAttack()) {
+//            Position position = gameData.getPosition();
+//            position.setX(fb.getX() + (weapon.height + head.radius) * MathUtils.sinDeg(fb.getMoveAngle()));
+//            position.setY(fb.getY() + (weapon.height + head.radius) * MathUtils.cosDeg(fb.getMoveAngle()));
+//            gameData.getFireBalls().add(Position.of(
+//                    position.getX() +
+//            ));
         }
     }
 
     private void drawGameDatas() {
         for (Map.Entry<String, GameData> gameData : gameDataMap.entrySet()) {
-            Tank tank = new Tank(shapeRenderer, gameData.getValue());
+            Tank tank = new Tank(shapeRenderer, gameData.getValue(), Level.D.getValue());
             tank.draw();
+            if (gameData.getValue().getFireBalls() != null && !gameData.getValue().getFireBalls().isEmpty()) {
+                tank.fire();
+            }
         }
     }
 

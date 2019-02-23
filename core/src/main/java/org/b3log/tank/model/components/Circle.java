@@ -26,7 +26,7 @@ public class Circle extends Shape {
     public void draw(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(color);
         shapeRenderer.begin(shapeType);
-        if (this.segments < 0) {
+        if (this.segments <= 0) {
             shapeRenderer.circle(position.getX(), position.getY(), radius);
         } else {
             shapeRenderer.circle(position.getX(), position.getY(), radius, segments);
