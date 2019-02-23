@@ -19,7 +19,7 @@ public class GameClientHandler extends SimpleChannelInboundHandler<Object> {
             throws Exception {
         if (obj instanceof Map) {
             Map<String, GameData> gameDataMap = (Map) obj;
-            log.debug("From Server:> {}", obj);
+//            log.debug("From Server:> {}", obj);
 
             GdxTank gdxTank = GdxTank.getInstance();
             gdxTank.updateGameDataMap(gameDataMap);

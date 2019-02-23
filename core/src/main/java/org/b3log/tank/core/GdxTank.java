@@ -28,8 +28,8 @@ public class GdxTank implements ApplicationListener {
     private KeyboardInput keyboardInput = new KeyboardInput();
     private GameData gameData = GameData.setPosition(player, MathUtils.random(10, 60), MathUtils.random(50, 100));
     private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
-//    private GameClient gameClient = new GameClient("localhost", 8080, null);
-    private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
+    private GameClient gameClient = new GameClient("localhost", 8080, null);
+//    private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
 
     private GdxTank() {
     }
@@ -123,9 +123,9 @@ public class GdxTank implements ApplicationListener {
     }
 
     private void drawGameDatas() {
-        for (Map.Entry<String, GameData> positionMap : gameDataMap.entrySet()) {
-            Tank tank = new Tank(shapeRenderer, positionMap.getValue());
-            tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
+        for (Map.Entry<String, GameData> gameData : gameDataMap.entrySet()) {
+            Tank tank = new Tank(shapeRenderer, gameData.getValue());
+            tank.draw();
         }
     }
 

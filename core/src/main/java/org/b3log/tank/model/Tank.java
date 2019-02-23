@@ -5,13 +5,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.model.common.GameData;
 import org.b3log.tank.model.common.Position;
 import org.b3log.tank.model.components.Circle;
 import org.b3log.tank.model.components.Rectangle;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Map;
 
 /**
  * @author : yu.zhang
@@ -21,60 +21,61 @@ import java.util.Queue;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Slf4j
 public class Tank {
     private ShapeRenderer shapeRenderer;
     private GameData gameData;
 //    private int level;
 //    private Color color;
 
-    public void draw(Head head, Body body, Weapon weapon) {
-        Position headPos = new Position();
-        headPos.setX(gameData.getPosition().getX());
-        headPos.setY(gameData.getPosition().getY());
-//        headPos.setRotateAngle(gameData.getRotateAngle());
-        drawHead(headPos, head.radius, head.segments);
+    public void draw() {
+        Head head = new Head();
+        head.setPosition(gameData.getPosition());
+        drawHead(head);
 
-        Position bodyPos = new Position();
-        bodyPos.setX(gameData.getPosition().getX() - body.width / 2f);
-        bodyPos.setY(gameData.getPosition().getY() - body.height / 2f);
-        bodyPos.setMoveAngle(gameData.getPosition().getMoveAngle());
-        drawBody(bodyPos, body.width, body.height, gameData.getPosition().getX() - bodyPos.getX(), gameData.getPosition().getY() - bodyPos.getY());
+        Body body = new Body();
+        body.position.setX(gameData.getPosition().getX() - body.width / 2f);
+        body.position.setY(gameData.getPosition().getY() - body.height / 2f);
+        body.position.setMoveAngle(gameData.getPosition().getMoveAngle());
+        drawBody(body);
 
-        Position weaponPos = new Position();
-        weaponPos.setX(headPos.getX() - weapon.width / 2f);
-        weaponPos.setY(headPos.getY() + head.radius - 3f);
-        weaponPos.setMoveAngle(gameData.getRotateAngle());
-        drawWeapon(weaponPos, weapon.width, weapon.height, gameData.getPosition().getX() - weaponPos.getX(), gameData.getPosition().getY() - weaponPos.getY());
+        Weapon weapon = new Weapon();
+        weapon.position.setX(head.position.getX() - weapon.width / 2f);
+        weapon.position.setY(head.position.getY() + head.radius - 3f);
+        weapon.position.setMoveAngle(gameData.getRotateAngle());
+        drawWeapon(weapon, head.radius);
 
-        Queue<Position> fireBalls = new LinkedList<>();
-        gameData.getFireBalls().forEach(fire -> {
-            drawFire(fire);
-        });
+//        gameData.getFireBalls().forEach(fire -> {
+//            drawFire(fire);
+//        });
     }
 
     private void drawFire(Position position) {
-
+//        Circle circle = new Circle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
+//        circle.setRadius(radius);
+//        circle.setSegments(segments);
+//        circle.draw(shapeRenderer);
     }
 
-    private void drawHead(Position position, float radius, int segments) {
-        Circle circle = new Circle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
-        circle.setRadius(radius);
-        circle.setSegments(segments);
+    private void drawHead(Head head) {
+        Circle circle = new Circle(head.position, Color.WHITE, ShapeRenderer.ShapeType.Line);
+        circle.setRadius(head.radius);
+        circle.setSegments(head.segments);
         circle.draw(shapeRenderer);
     }
 
-    private void drawBody(Position position, float width, float height, float x, float y) {
-        Rectangle rectangle = new Rectangle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
-        rectangle.setWidth(width);
-        rectangle.setHeight(height);
-        rectangle.draw(shapeRenderer, x, y, position.getMoveAngle());
+    private void drawBody(Body body) {
+        Rectangle rectangle = new Rectangle(body.position, Color.WHITE, ShapeRenderer.ShapeType.Line);
+        rectangle.setWidth(body.width);
+        rectangle.setHeight(body.height);
+        rectangle.draw(shapeRenderer, body.width / 2f, body.height / 2f, body.position.getMoveAngle());
     }
 
-    private void drawWeapon(Position position, float width, float height, float x, float y) {
-        Rectangle rectangle = new Rectangle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
-        rectangle.setWidth(width);
-        rectangle.setHeight(height);
-        rectangle.draw(shapeRenderer, x, y, position.getMoveAngle());
+    private void drawWeapon(Weapon weapon, float radius) {
+        Rectangle rectangle = new Rectangle(weapon.position, Color.WHITE, ShapeRenderer.ShapeType.Line);
+        rectangle.setWidth(weapon.width);
+        rectangle.setHeight(weapon.height);
+        rectangle.draw(shapeRenderer, weapon.width / 2f, 3f - radius, weapon.position.getMoveAngle());
     }
 
     @Data
@@ -83,7 +84,7 @@ public class Tank {
     public static class Head {
         private float radius = 16;
         private int segments = 6;
-        private double angle;
+        private Position position = new Position();
     }
 
     @Data
@@ -92,7 +93,11 @@ public class Tank {
     public static class Body {
         private float width = 35;
         private float height = 50;
-        private double angle;
+        private Position position = new Position();
+
+        Body(Position position) {
+            this.position = position;
+        }
     }
 
     @Data
@@ -101,5 +106,18 @@ public class Tank {
     public static class Weapon {
         private float width = 5;
         private float height = 35;
+        private Position position = new Position();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Fire {
+        private float radius = 5;
+        private Map<Position, Integer> fireBall;
+        /**
+         * 射程
+         */
+        private float length = 20;
     }
 }
