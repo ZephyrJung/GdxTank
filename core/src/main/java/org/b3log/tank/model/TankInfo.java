@@ -51,6 +51,7 @@ public class TankInfo {
         /**
          * 射程
          */
-        private int length;
+        private int length = 200;
+        private int area = 10;
     }
 }

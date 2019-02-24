@@ -13,6 +13,8 @@ import org.b3log.tank.model.components.Circle;
 import org.b3log.tank.model.components.Rectangle;
 import org.b3log.tank.model.constants.Level;
 
+import java.util.Map;
+
 /**
  * @author : yu.zhang
  * Date : 2019/2/15 2:23 PM
@@ -46,19 +48,20 @@ public class Tank {
         drawWeapon(weapon, weaponPos, tankInfo.getHead().getRadius());
     }
 
-    public void fire() {
+    public void fire(Map<Position,Integer> fireBalls) {
         TankInfo tankInfo = Level.fromCode(level).getTankInfo();
-        gameData.getFireBalls().forEach((Position fb) -> {
-            //todo
-            fb.setX(fb.getX() + (tankInfo.getWeapon().getHeight() + tankInfo.getHead().getRadius()) * MathUtils.cosDeg(fb.getMoveAngle()));
-            fb.setY(fb.getY() + (tankInfo.getWeapon().getHeight() + tankInfo.getHead().getRadius()) * MathUtils.sinDeg(fb.getMoveAngle()));
-            drawFire(tankInfo.getFire(), fb);
+        fireBalls.forEach((k, v) -> {
+            Position position = Position.of(
+                    k.getX() + (tankInfo.getWeapon().getHeight() + tankInfo.getHead().getRadius() + tankInfo.getFire().getLength()) * MathUtils.sinDeg(-k.getMoveAngle()),
+                    k.getY() + (tankInfo.getWeapon().getHeight() + tankInfo.getHead().getRadius() + tankInfo.getFire().getLength()) * MathUtils.cosDeg(-k.getMoveAngle())
+            );
+            drawFire(tankInfo.getFire(), position, v);
         });
     }
 
-    private void drawFire(TankInfo.Fire fire, Position position) {
+    private void drawFire(TankInfo.Fire fire, Position position, Integer radius) {
         Circle circle = new Circle(position, Color.WHITE, ShapeRenderer.ShapeType.Line);
-        circle.setRadius(fire.getRadius());
+        circle.setRadius(fire.getRadius() + radius);
         circle.draw(shapeRenderer);
     }
 

@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import javafx.geometry.Pos;
 import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.client.GameClient;
 import org.b3log.tank.input.KeyboardProcessor;
@@ -17,6 +16,7 @@ import org.b3log.tank.model.common.KeyboardInput;
 import org.b3log.tank.model.common.Position;
 import org.b3log.tank.model.constants.Level;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -27,12 +27,13 @@ public class GdxTank implements ApplicationListener {
     private Texture texture;
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
-    private float elapsed;
+    private int elapsed;
     private KeyboardInput keyboardInput = new KeyboardInput();
     private GameData gameData = GameData.setPosition(player, MathUtils.random(10, 60), MathUtils.random(50, 100));
     private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
     private GameClient gameClient = new GameClient("localhost", 8080, null);
-//    private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
+    //    private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
+    private Map<Position, Integer> fireBalls = new HashMap<>();
 
     private GdxTank() {
     }
@@ -65,7 +66,8 @@ public class GdxTank implements ApplicationListener {
 
     @Override
     public void render() {
-        elapsed += Gdx.graphics.getDeltaTime();
+//        elapsed += Gdx.graphics.getDeltaTime();
+        elapsed += 1;
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
 //        batch.begin();
@@ -77,6 +79,7 @@ public class GdxTank implements ApplicationListener {
 //        tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
         gameClient.notifyServer(gameData);
         drawGameDatas();
+
     }
 
     @Override
@@ -125,15 +128,22 @@ public class GdxTank implements ApplicationListener {
             position.setMoveAngle(gameData.getRotateAngle());
             gameData.getFireBalls().add(position);
         }
+        gameData.getFireBalls().forEach(fb -> fireBalls.put(fb, 1));
     }
 
     private void drawGameDatas() {
         for (Map.Entry<String, GameData> gameData : gameDataMap.entrySet()) {
             Tank tank = new Tank(shapeRenderer, gameData.getValue(), Level.D.getValue());
             tank.draw();
-            if (gameData.getValue().getFireBalls() != null && !gameData.getValue().getFireBalls().isEmpty()) {
-                tank.fire();
+            if (!fireBalls.isEmpty()) {
+                tank.fire(fireBalls);
             }
+            fireBalls.forEach((k, v) -> {
+                if (Level.D.getTankInfo().getFire().getRadius() + v + 1 >= Level.D.getTankInfo().getFire().getArea()) {
+                    fireBalls.remove(k);
+                }
+                fireBalls.put(k, v + 1);
+            });
         }
     }
 
