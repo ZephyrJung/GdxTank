@@ -1,5 +1,7 @@
 package org.b3log.tank.core;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.b3log.tank.client.GameClient;
+import org.b3log.tank.client.WebSocketClient;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
 import org.b3log.tank.model.common.GameData;
@@ -33,6 +36,7 @@ public class GdxTank implements ApplicationListener {
     private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
     //    private GameClient gameClient = new GameClient("localhost", 8080, null);
     private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
+    private WebSocketClient webSocketClient = new WebSocketClient();
     private Map<Position, Integer> fireBalls = new HashMap<>();
 
     private GdxTank() {
@@ -55,8 +59,10 @@ public class GdxTank implements ApplicationListener {
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         Gdx.input.setInputProcessor(new KeyboardProcessor(keyboardInput));
-        gameClient.setDaemon(true);
-        gameClient.start();
+//        gameClient.setDaemon(true);
+//        gameClient.start();
+        webSocketClient.setDaemon(true);
+        webSocketClient.start();
     }
 
     @Override
@@ -77,7 +83,8 @@ public class GdxTank implements ApplicationListener {
         fireControl();
 //        Tank tank = new Tank(shapeRenderer, position);
 //        tank.draw(new Tank.Head(), new Tank.Body(), new Tank.Weapon());
-        gameClient.notifyServer(gameData);
+//        gameClient.notifyServer(gameData);
+        webSocketClient.notifyServer(gameData);
         drawGameDatas();
 
     }
@@ -147,7 +154,7 @@ public class GdxTank implements ApplicationListener {
         }
     }
 
-    public void updateGameDataMap(Map<String, GameData> gameDataMap) {
-        this.gameDataMap = gameDataMap;
+    public void updateGameDataMap(Map gameDataMap) {
+        gameDataMap.forEach((k, v) -> this.gameDataMap.put(String.valueOf(k), JSON.parseObject(v.toString(), GameData.class)));
     }
 }

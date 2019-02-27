@@ -21,13 +21,13 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author <a href="http://www.waylau.com">waylau.com</a> 2015年11月6日
  */
-@Service
+//@Service
 public final class GameServer {
     private static int PORT = 8080;
 
     public static final Map<String, GameData> GAME_DATA_MAP = new ConcurrentHashMap<String, GameData>();
 
-    @PostConstruct
+//    @PostConstruct
     public static void serviceStart() throws Exception {
 
         // Configure the server.

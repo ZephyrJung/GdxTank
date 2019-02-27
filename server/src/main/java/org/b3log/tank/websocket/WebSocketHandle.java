@@ -1,11 +1,13 @@
 package org.b3log.tank.websocket;
 
+import com.alibaba.fastjson.JSON;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.extern.slf4j.Slf4j;
+import org.b3log.tank.model.common.GameData;
 
 /**
  * @author : yu.zhang
@@ -21,8 +23,11 @@ public class WebSocketHandle extends SimpleChannelInboundHandler<Object> {
 
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof TextWebSocketFrame) {
-            log.debug("收到信息：{}", ((TextWebSocketFrame) msg).text());
-            ctx.channel().writeAndFlush(new TextWebSocketFrame("123456"));
+            String text = ((TextWebSocketFrame) msg).text();
+            log.debug("收到信息：{}", text);
+            GameData gameData = JSON.parseObject(text, GameData.class);
+            GameServer.GAME_DATA_MAP.put(gameData.getPlayerId(), gameData);
+            ctx.channel().writeAndFlush(new TextWebSocketFrame(JSON.toJSONString(GameServer.GAME_DATA_MAP)));
         } else if (msg instanceof BinaryWebSocketFrame) {
             log.debug("收到二进制信息：{}", ((BinaryWebSocketFrame) msg).content().readableBytes());
             BinaryWebSocketFrame binaryWebSocketFrame = new BinaryWebSocketFrame(Unpooled.buffer().writeBytes("xxx".getBytes()));

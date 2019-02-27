@@ -1,10 +1,17 @@
-package org.b3log.tank.websocket;
+package org.b3log.tank.client;
 
+import com.alibaba.fastjson.JSON;
+import com.badlogic.gdx.Game;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.b3log.tank.core.GdxTank;
+import org.b3log.tank.model.common.GameData;
+
+import java.util.Map;
 
 /**
  * @author : yu.zhang
@@ -12,6 +19,7 @@ import lombok.Data;
  * Email : zephyrjung@126.com
  **/
 @Data
+@Slf4j
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
     WebSocketClientHandshaker handshaker;
     ChannelPromise handshakeFuture;
@@ -50,16 +58,17 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             if (frame instanceof TextWebSocketFrame) {
                 TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
                 //this.listener.onMessage(textFrame.text());
-                System.out.println("TextWebSocketFrame");
+                Map map = JSON.parseObject(textFrame.text(), Map.class);
+                GdxTank gdxTank = GdxTank.getInstance();
+                gdxTank.updateGameDataMap(map);
             } else if (frame instanceof BinaryWebSocketFrame) {
-                BinaryWebSocketFrame binFrame = (BinaryWebSocketFrame) frame;
-                System.out.println("BinaryWebSocketFrame");
+                log.debug("binary web socket frame");
             } else if (frame instanceof PongWebSocketFrame) {
-                System.out.println("WebSocket Client received pong");
+                log.debug("pong web socket frame");
             } else if (frame instanceof CloseWebSocketFrame) {
-                System.out.println("receive close frame");
-                //this.listener.onClose(((CloseWebSocketFrame)frame).statusCode(), ((CloseWebSocketFrame)frame).reasonText());
                 ch.close();
+            }else{
+                log.debug(frame.toString());
             }
 
         }

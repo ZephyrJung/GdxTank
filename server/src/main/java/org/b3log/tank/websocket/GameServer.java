@@ -8,8 +8,13 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.b3log.tank.model.common.GameData;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : yu.zhang
@@ -17,20 +22,24 @@ import java.net.InetSocketAddress;
  * Email : zephyrjung@126.com
  * https://blog.csdn.net/u010939285/article/details/81231221
  **/
-public class ServerMain {
-    public static void main(String[] args) throws Exception{
+@Service
+public class GameServer {
+    public static final Map<String, GameData> GAME_DATA_MAP = new ConcurrentHashMap<String, GameData>();
+
+    @PostConstruct
+    public static void serviceStart() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup wokerGroup = new NioEventLoopGroup();
-        try{
+        try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
-            serverBootstrap.group(bossGroup,wokerGroup).channel(NioServerSocketChannel.class)
+            serverBootstrap.group(bossGroup, wokerGroup).channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .option(ChannelOption.SO_KEEPALIVE,true)
+                    .option(ChannelOption.SO_KEEPALIVE, true)
                     .childHandler(new WebSocketChannelInitializer());
 
-            ChannelFuture channelFuture = serverBootstrap.bind(new InetSocketAddress(8899)).sync();
+            ChannelFuture channelFuture = serverBootstrap.bind(new InetSocketAddress(8080)).sync();
             channelFuture.channel().closeFuture().sync();
-        }finally {
+        } finally {
             bossGroup.shutdownGracefully();
             wokerGroup.shutdownGracefully();
         }
