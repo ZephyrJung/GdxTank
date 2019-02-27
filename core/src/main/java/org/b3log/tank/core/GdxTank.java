@@ -1,7 +1,6 @@
 package org.b3log.tank.core;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.b3log.tank.client.GameClient;
 import org.b3log.tank.client.WebSocketClient;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
@@ -19,7 +17,6 @@ import org.b3log.tank.model.common.KeyboardInput;
 import org.b3log.tank.model.common.Position;
 import org.b3log.tank.model.constants.Level;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,9 +32,9 @@ public class GdxTank implements ApplicationListener {
     private GameData gameData = GameData.setPosition(player, MathUtils.random(10, 60), MathUtils.random(50, 100));
     private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
     //    private GameClient gameClient = new GameClient("localhost", 8080, null);
-    private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
+//    private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
     private WebSocketClient webSocketClient = new WebSocketClient();
-    private Map<Position, Integer> fireBalls = new HashMap<>();
+    private Map<Position, Integer> fireBalls = new ConcurrentHashMap<>();
 
     private GdxTank() {
     }
