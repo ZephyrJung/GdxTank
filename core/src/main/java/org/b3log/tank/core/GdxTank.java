@@ -29,12 +29,13 @@ public class GdxTank implements ApplicationListener {
     private SpriteBatch batch;
     private int elapsed;
     private KeyboardInput keyboardInput = new KeyboardInput();
-    private GameData gameData = GameData.setPosition(player, MathUtils.random(10, 60), MathUtils.random(50, 100));
+    private GameData gameData = GameData.setPosition(player, MathUtils.random(10, 200), MathUtils.random(10, 200));
     private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
     //    private GameClient gameClient = new GameClient("localhost", 8080, null);
 //    private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
     private WebSocketClient webSocketClient = new WebSocketClient();
     private Map<Position, Integer> fireBalls = new ConcurrentHashMap<>();
+    private Tank tank = null;
 
     private GdxTank() {
     }
@@ -58,6 +59,8 @@ public class GdxTank implements ApplicationListener {
         Gdx.input.setInputProcessor(new KeyboardProcessor(keyboardInput));
 //        gameClient.setDaemon(true);
 //        gameClient.start();
+        tank = new Tank();
+        tank.setShapeRenderer(shapeRenderer);
         webSocketClient.setDaemon(true);
         webSocketClient.start();
     }
@@ -137,7 +140,8 @@ public class GdxTank implements ApplicationListener {
 
     private void drawGameDatas() {
         for (Map.Entry<String, GameData> gameData : gameDataMap.entrySet()) {
-            Tank tank = new Tank(shapeRenderer, gameData.getValue(), Level.D.getValue());
+            tank.setGameData(gameData.getValue());
+            tank.setLevel(Level.D.getValue());
             tank.draw();
             if (!fireBalls.isEmpty()) {
                 tank.fire(fireBalls);
