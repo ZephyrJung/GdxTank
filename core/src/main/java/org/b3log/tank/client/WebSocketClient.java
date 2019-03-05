@@ -17,8 +17,10 @@ import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
+import net.spy.memcached.MemcachedClient;
 import org.b3log.tank.model.common.GameData;
 
+import java.net.InetSocketAddress;
 import java.net.URI;
 
 /**
@@ -29,7 +31,7 @@ import java.net.URI;
 @Slf4j
 public class WebSocketClient extends Thread {
     private Channel channel;
-//    private static final String SERVER_URI = "ws://hitbug.cn:80/ws";
+    //    private static final String SERVER_URI = "ws://hitbug.cn:80/ws";
     private static final String SERVER_URI = "ws://127.0.0.1:8080/ws";
 
     @Override

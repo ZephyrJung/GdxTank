@@ -1,15 +1,14 @@
 package org.b3log.tank.client;
 
 import com.alibaba.fastjson.JSON;
-import com.badlogic.gdx.Game;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import net.spy.memcached.MemcachedClient;
 import org.b3log.tank.core.GdxTank;
-import org.b3log.tank.model.common.GameData;
 
 import java.util.Map;
 
@@ -23,7 +22,6 @@ import java.util.Map;
 public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
     WebSocketClientHandshaker handshaker;
     ChannelPromise handshakeFuture;
-
     public void handlerAdded(ChannelHandlerContext ctx) {
         this.handshakeFuture = ctx.newPromise();
     }
@@ -33,7 +31,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
     }
 
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("channelRead0  " + this.handshaker.isHandshakeComplete());
+        log.debug("channelRead0  {}", this.handshaker.isHandshakeComplete());
         Channel ch = ctx.channel();
         FullHttpResponse response;
         if (!this.handshaker.isHandshakeComplete()) {
@@ -43,7 +41,7 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
                 this.handshaker.finishHandshake(ch, response);
                 //设置成功
                 this.handshakeFuture.setSuccess();
-                System.out.println("WebSocket Client connected! response headers[sec-websocket-extensions]:{}" + response.headers());
+                log.debug("WebSocket Client connected! response headers[sec-websocket-extensions]:{}", response.headers());
             } catch (WebSocketHandshakeException var7) {
                 FullHttpResponse res = (FullHttpResponse) msg;
                 String errorMsg = String.format("WebSocket Client failed to connect,status:%s,reason:%s", res.status(), res.content().toString(CharsetUtil.UTF_8));
@@ -51,23 +49,22 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
             }
         } else if (msg instanceof FullHttpResponse) {
             response = (FullHttpResponse) msg;
-            //this.listener.onFail(response.status().code(), response.content().toString(CharsetUtil.UTF_8));
             throw new IllegalStateException("Unexpected FullHttpResponse (getStatus=" + response.status() + ", content=" + response.content().toString(CharsetUtil.UTF_8) + ')');
         } else {
             WebSocketFrame frame = (WebSocketFrame) msg;
             if (frame instanceof TextWebSocketFrame) {
                 TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-                //this.listener.onMessage(textFrame.text());
-                Map map = JSON.parseObject(textFrame.text(), Map.class);
+//                Map map = JSON.parseObject(textFrame.text(), Map.class);
+
                 GdxTank gdxTank = GdxTank.getInstance();
-                gdxTank.updateGameDataMap(map);
+                gdxTank.updateGameDataMap(textFrame.text());
             } else if (frame instanceof BinaryWebSocketFrame) {
                 log.debug("binary web socket frame");
             } else if (frame instanceof PongWebSocketFrame) {
                 log.debug("pong web socket frame");
             } else if (frame instanceof CloseWebSocketFrame) {
                 ch.close();
-            }else{
+            } else {
                 log.debug(frame.toString());
             }
 

@@ -21,8 +21,8 @@ public class GameClientHandler extends SimpleChannelInboundHandler<Object> {
             Map<String, GameData> gameDataMap = (Map) obj;
 //            log.debug("From Server:> {}", obj);
 
-            GdxTank gdxTank = GdxTank.getInstance();
-            gdxTank.updateGameDataMap(gameDataMap);
+//            GdxTank gdxTank = GdxTank.getInstance();
+//            gdxTank.updateGameDataMap(gameDataMap);
         }
     }
 }

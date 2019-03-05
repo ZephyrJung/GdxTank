@@ -1,6 +1,7 @@
 package org.b3log.tank.core;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL30;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import lombok.extern.slf4j.Slf4j;
+import net.spy.memcached.MemcachedClient;
 import org.b3log.tank.client.WebSocketClient;
 import org.b3log.tank.input.KeyboardProcessor;
 import org.b3log.tank.model.Tank;
@@ -17,11 +19,13 @@ import org.b3log.tank.model.common.KeyboardInput;
 import org.b3log.tank.model.common.Position;
 import org.b3log.tank.model.constants.Level;
 
+import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class GdxTank implements ApplicationListener {
+    private MemcachedClient mcc = null;
     private static volatile GdxTank gdxTank;
     private String player = "zephyr" + MathUtils.random(1, 10);
     private Texture texture;
@@ -30,7 +34,7 @@ public class GdxTank implements ApplicationListener {
     private int elapsed;
     private KeyboardInput keyboardInput = new KeyboardInput();
     private GameData gameData = GameData.setPosition(player, MathUtils.random(10, 200), MathUtils.random(10, 200));
-    private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
+    //    private Map<String, GameData> gameDataMap = new ConcurrentHashMap<>();
     //    private GameClient gameClient = new GameClient("localhost", 8080, null);
 //    private GameClient gameClient = new GameClient("hitbug.cn", 80, null);
     private WebSocketClient webSocketClient = new WebSocketClient();
@@ -63,6 +67,12 @@ public class GdxTank implements ApplicationListener {
         tank.setShapeRenderer(shapeRenderer);
         webSocketClient.setDaemon(true);
         webSocketClient.start();
+        try {
+            mcc = new MemcachedClient(new InetSocketAddress("127.0.0.1", 11211));
+            mcc.set("gameData",900,null);
+        } catch (Exception e) {
+            log.error("memcached client start error,{}", e);
+        }
     }
 
     @Override
@@ -102,6 +112,7 @@ public class GdxTank implements ApplicationListener {
     @Override
     public void dispose() {
         log.debug("Game Disposed");
+        mcc.shutdown();
     }
 
     private void moveControl() {
@@ -139,8 +150,10 @@ public class GdxTank implements ApplicationListener {
     }
 
     private void drawGameDatas() {
-        for (Map.Entry<String, GameData> gameData : gameDataMap.entrySet()) {
-            tank.setGameData(gameData.getValue());
+        String gameDataText = mcc.get("gameData").toString();
+        JSONObject jsonObject = JSON.parseObject(gameDataText);
+        for (Map.Entry gameData : jsonObject.entrySet()) {
+            tank.setGameData(JSON.parseObject(gameData.getValue().toString(), GameData.class));
             tank.setLevel(Level.D.getValue());
             tank.draw();
             if (!fireBalls.isEmpty()) {
@@ -155,7 +168,8 @@ public class GdxTank implements ApplicationListener {
         }
     }
 
-    public void updateGameDataMap(Map gameDataMap) {
-        gameDataMap.forEach((k, v) -> this.gameDataMap.put(String.valueOf(k), JSON.parseObject(v.toString(), GameData.class)));
+    public void updateGameDataMap(String text) {
+        mcc.set("gameData", 900, text);
+//        gameDataMap.forEach((k, v) -> this.gameDataMap.put(String.valueOf(k), JSON.parseObject(v.toString(), GameData.class)));
     }
 }
